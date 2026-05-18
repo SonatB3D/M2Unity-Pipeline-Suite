@@ -362,117 +362,8 @@ M2Unity Pipeline Suite was created to make the Maya-to-Unity static mesh workflo
 
 It is designed to help users catch problems earlier, reduce repetitive manual work, and create a more organized bridge between Maya asset preparation and Unity project integration.
 
-## Screenshots
-
-The following screenshots show the main interface, validation workflow, collider proxy tools, export output, generated reports, and Unity-oriented asset preparation structure of **M2Unity Pipeline Suite**.
-
-![Dashboard / Wizard](./M2Unity_pipeline_suite_images/m2unity.png)
-
-**Dashboard / Wizard**
-
----
-
-![Rules: Asset Scope and Naming](./M2Unity_pipeline_suite_images/m2unity2.png)
-
-**Rules: Asset Scope and Naming**
-
----
-
-![Rules: Geometry and Dimensions](./M2Unity_pipeline_suite_images/m2unity3.png)
-
-**Rules: Geometry and Dimensions**
-
----
-
-![Rules: Pivot, Grid and Unity Readiness](./M2Unity_pipeline_suite_images/m2unity4.png)
-
-**Rules: Pivot, Grid and Unity Readiness**
-
----
-
-![Rules: LOD, Material Slot and UV Readiness](./M2Unity_pipeline_suite_images/m2unity5.png)
-
-**Rules: LOD, Material Slot and UV Readiness**
-
----
-
-![Prep / Fix: Safe Fix Options](./M2Unity_pipeline_suite_images/m2unity6.png)
-
-**Prep / Fix: Safe Fix Options**
-
----
-
-![Collider Proxy: Rules and Role Utility](./M2Unity_pipeline_suite_images/m2unity7.png)
-
-**Collider Proxy: Rules and Role Utility**
-
----
-
-![Help: Recommended Workflow and Naming Rules](./M2Unity_pipeline_suite_images/m2unity8.png)
-
-**Help: Recommended Workflow and Naming Rules**
-
----
-
-![Analysis Results and Asset Status Table](./M2Unity_pipeline_suite_images/m2unity9.png)
-
-**Analysis Results and Asset Status Table**
-
----
-
-![Detailed Validation Log](./M2Unity_pipeline_suite_images/m2unity10.png)
-
-**Detailed Validation Log**
-
----
-
-![Role Naming and Mesh Prefix Workflow](./M2Unity_pipeline_suite_images/m2unity11.png)
-
-**Role Naming and Mesh Prefix Workflow**
-
----
-
-![Collider Proxy Matching Workflow](./M2Unity_pipeline_suite_images/m2unity12.png)
-
-**Collider Proxy Matching Workflow**
-
----
-
-![Collider Proxy Rename Result](./M2Unity_pipeline_suite_images/m2unity13.png)
-
-**Collider Proxy Rename Result**
-
----
-
-![Exported FBX, JSON, HTML and C# Output Files](./M2Unity_pipeline_suite_images/m2unity14.png)
-
-**Exported FBX, JSON, HTML and C# Output Files**
-
----
-
-![Unity-Oriented Mesh and Collider Object Structure](./M2Unity_pipeline_suite_images/m2unity15.png)
-
-**Unity-Oriented Mesh and Collider Object Structure**
-
----
-
-![Generated HTML Report Overview](./M2Unity_pipeline_suite_images/m2unity16.png)
-
-**Generated HTML Report Overview**
-
----
-
-![Generated HTML Report Core Checks](./M2Unity_pipeline_suite_images/m2unity17.png)
-
-**Generated HTML Report: Core Checks**
-
----
-
-![Generated HTML Report Readiness Checks](./M2Unity_pipeline_suite_images/m2unity18.png)
-
-**Generated HTML Report: LOD, Material, UV and Socket Readiness**
-
 ```
+
 ## Screenshots
 
 The following screenshots show the main interface, validation workflow, collider proxy tools, export output, generated reports, and Unity-oriented asset preparation structure of **M2Unity Pipeline Suite**.
@@ -583,6 +474,4 @@ The following screenshots show the main interface, validation workflow, collider
   <img src="M2Unity_pipeline_suite_images/m2unity18.png" alt="M2Unity Pipeline Suite HTML Report Readiness Checks Screenshot" width="100%">
   <br>
   <sub>Generated HTML Report: LOD, Material, UV and Socket Readiness — 1846 x 930 px</sub>
-</p>
- nd Asset Status Table — 1546 x 873 px</sub>
 </p>
