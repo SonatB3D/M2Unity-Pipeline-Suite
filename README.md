@@ -1,6 +1,6 @@
 # M2Unity Pipeline Suite
 
-**M2Unity Pipeline Suite** is a Maya-to-Unity asset preparation toolkit designed to help artists, technical artists, indie developers, and small production teams prepare cleaner static mesh assets before importing them into Unity.
+**M2Unity Pipeline Suite** is a Free to Use, Maya-to-Unity asset preparation toolkit designed to help artists, technical artists, indie developers, and small production teams prepare cleaner static mesh assets before importing them into Unity.
 
 The tool focuses on **preflight validation**, **safe cleanup**, **Unity-oriented naming**, **collider and trigger proxy preparation**, **FBX export support**, and **report-based quality control**. It is not only an FBX exporter. It is a production-minded helper that checks common asset issues earlier in the pipeline, before they become Unity import problems.
 
