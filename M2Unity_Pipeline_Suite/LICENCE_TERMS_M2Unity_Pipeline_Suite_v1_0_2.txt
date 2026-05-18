@@ -1,0 +1,220 @@
+M2Unity Pipeline Suite — LICENCE TERMS
+
+Developer: Sonat Birdane
+
+IMPORTANT
+Please read these terms before downloading, installing, using, sharing, modifying, or redistributing this tool.
+
+============================================================
+1. OWNERSHIP
+============================================================
+
+M2Unity Pipeline Suite and all related files, source code, scripts, installer files, shelf setup files, icons, documentation, examples, generated report templates and packaged releases remain the intellectual property of the author.
+
+The tool is provided for use under the terms described in this document.
+
+These terms do not transfer ownership of the tool, source code, branding, icons, documentation, or related materials to the user.
+
+============================================================
+2. ALLOWED USE
+============================================================
+
+You may:
+
+    Download and use this tool for personal, educational, portfolio, evaluation and internal workflow use.
+    Use this tool in both non-commercial and commercial content production workflows.
+    Install and run the tool on your own system.
+    Use the tool to prepare, validate, fix, export and document your own Maya static mesh assets.
+    Use the tool while creating assets, games, projects, marketplace content, client work or studio work.
+    Use exported FBX files, generated reports and generated Unity helper scripts as part of your own production workflow.
+    Privately modify the tool for your own personal testing or internal workflow needs, as long as the modified version is not publicly shared, redistributed, sold, or represented as an official release.
+
+============================================================
+3. COMMERCIAL PRODUCTION USE
+============================================================
+
+You are allowed to use M2Unity Pipeline Suite as part of your own commercial production workflow.
+
+This means you may use the tool to create, prepare, validate, export and deliver your own commercial 3D assets, games, Unity projects, marketplace products, client work, studio work or internal production content.
+
+However, commercial production use does not grant the right to sell, redistribute, repackage, sublicense, bundle, publish, or include the tool itself as part of another paid product, service, asset pack, training package, software bundle, or marketplace listing without explicit written permission from the author.
+
+============================================================
+4. FREE / OPTIONAL SUPPORT MODEL
+============================================================
+
+M2Unity Pipeline Suite may be distributed for free through official release locations controlled by the author.
+
+The author may also provide an optional pay-what-you-want or donation-based download through official platforms.
+
+Optional payment or support does not grant resale, redistribution, sublicensing, ownership, or rebranding rights unless a separate written agreement is provided by the author.
+
+============================================================
+5. RESTRICTIONS
+============================================================
+
+You may not:
+
+    Re-upload this tool to other websites, drives, forums, repositories, marketplaces, file-sharing platforms, or third-party distribution channels without permission.
+    Redistribute the files in modified or unmodified form without explicit permission from the author.
+    Claim authorship or ownership of the tool.
+    Sell, sublicense, rent, lease, bundle, package, or commercially redistribute the tool itself.
+    Include the tool itself as part of a paid product, paid service, asset pack, software bundle, course package, commercial distribution, or marketplace listing without explicit written permission from the author.
+    Publish edited, modified, repackaged, renamed, or rebranded versions as if they were official releases.
+    Remove, hide, or alter author credits, copyright notices, licence terms, documentation notices, or distribution information.
+    Use the tool name, branding, icon, or documentation in a misleading way that suggests official endorsement, partnership, or authorship.
+    Use generated installer or shelf files to misrepresent the origin of the tool.
+    Use the tool in a way that violates Autodesk Maya, Unity, or any third-party software licence terms.
+
+============================================================
+6. OFFICIAL DISTRIBUTION
+============================================================
+
+This tool should only be downloaded from official release locations controlled by the author.
+
+If you received the files from an unofficial source, you should obtain the latest official version from an official distribution location instead.
+
+Unofficial copies may be outdated, modified, unsafe, incomplete, or unsupported.
+
+============================================================
+7. MODIFICATION
+============================================================
+
+Private modification for personal testing, learning, or internal workflow adaptation is allowed.
+
+However, modified versions may not be:
+
+    Publicly shared
+    Redistributed
+    Sold
+    Uploaded to another platform
+    Represented as official
+    Used to mislead users about the original author or official release status
+    Bundled into another product without explicit written permission
+
+If you want to publish, fork, redistribute, translate, bundle, or commercially modify the tool, you must obtain explicit permission from the author unless the author provides a separate open-source licence stating otherwise.
+
+============================================================
+8. GENERATED OUTPUTS
+============================================================
+
+The tool may generate files such as:
+
+    FBX exports
+    JSON reports
+    HTML reports
+    Unity AssetPostprocessor C# helper scripts
+
+You may use generated output files in your own personal, educational, internal, or commercial production workflows.
+
+Generated reports and helper scripts are provided for workflow support and review. They do not remove the need for manual QA, technical review, or project-specific import validation.
+
+If you share generated reports publicly, you are responsible for removing any private project names, asset names, file paths, client names, or other confidential information that may appear in those reports.
+
+============================================================
+9. NO WARRANTY
+============================================================
+
+This tool is provided “as is” without warranty of any kind.
+
+The author does not guarantee that the tool will be error-free, uninterrupted, compatible with every Maya version, compatible with every Unity version, compatible with every studio environment, or suitable for every production pipeline.
+
+The author is not responsible for:
+
+    Data loss
+    Scene corruption
+    Export issues
+    Import issues
+    Broken files
+    Workflow interruption
+    Production delays
+    Compatibility issues
+    Unsupported Maya versions
+    Unsupported Unity versions
+    Third-party plug-in conflicts
+    Incorrect user configuration
+    Problems caused by unofficial, modified, or redistributed versions
+    Problems caused by manually edited generated scripts
+    Problems caused by adding generated scripts to Unity projects without review
+
+Always keep backups of important Maya scenes, Unity projects and production files before using automated cleanup, validation, import, export, or postprocessing tools.
+
+============================================================
+10. USER RESPONSIBILITY
+============================================================
+
+Users are responsible for reviewing all changes made by the tool.
+
+Before using the tool in production, users should:
+
+    Test it on duplicate scenes.
+    Keep backups of important files.
+    Review Safe Fix settings before applying them.
+    Review generated FBX files before delivery.
+    Review generated JSON and HTML reports.
+    Review generated Unity C# scripts before placing them inside a Unity project.
+    Confirm that generated collider and trigger behavior matches project requirements.
+    Confirm that the tool fits the intended production pipeline.
+
+============================================================
+11. THIRD-PARTY SOFTWARE
+============================================================
+
+M2Unity Pipeline Suite is designed to work with Autodesk Maya and Unity workflows.
+
+Autodesk Maya, Unity, and related names, trademarks, technologies and software products belong to their respective owners.
+
+This tool is not officially affiliated with, endorsed by, sponsored by, or maintained by Autodesk, Unity Technologies, or any other third-party software vendor unless explicitly stated by those companies.
+
+Users must follow the licence terms of all third-party software used with this tool.
+
+============================================================
+12. SUPPORT AND UPDATES
+============================================================
+
+The author may provide updates, fixes, documentation improvements, or support at the author's discretion.
+
+There is no guarantee of ongoing maintenance, compatibility updates, custom feature development, or response time unless a separate written agreement exists.
+
+Future versions may change features, file names, installer behavior, documentation, UI layout, naming conventions, or generated script behavior.
+
+============================================================
+13. LIMITATION OF LIABILITY
+============================================================
+
+To the maximum extent permitted by applicable law, the author shall not be liable for any direct, indirect, incidental, special, consequential, exemplary, production-related, business-related, or financial damages arising from the use or inability to use this tool.
+
+This includes but is not limited to:
+
+    Lost work
+    Lost time
+    Lost revenue
+    Production delays
+    Missed deadlines
+    Asset corruption
+    Project corruption
+    Client delivery problems
+    Pipeline disruption
+    Incorrect export or import results
+
+Use the tool at your own risk.
+
+============================================================
+14. ACCEPTANCE OF TERMS
+============================================================
+
+By downloading, installing, running, modifying, or using M2Unity Pipeline Suite, you agree to these terms.
+
+If you do not agree with these terms, do not use the tool.
+
+============================================================
+15. SUMMARY
+============================================================
+
+You may use M2Unity Pipeline Suite for personal, educational, portfolio, internal and commercial production work.
+
+You may not resell, redistribute, re-upload, rebrand, bundle, or claim ownership of the tool.
+
+You are responsible for backups, testing, reviewing generated output and confirming that the tool fits your workflow.
+
+The tool is provided as is, with no warranty.

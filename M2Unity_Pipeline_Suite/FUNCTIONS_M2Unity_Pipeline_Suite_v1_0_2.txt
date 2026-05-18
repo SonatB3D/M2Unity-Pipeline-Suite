@@ -1,0 +1,1475 @@
+M2UNITY PIPELINE SUITE - FUNCTIONS AND OPTIONS GUIDE
+Detailed Feature Reference for Maya-to-Unity Mesh Preparation
+
+Developer: Sonat Birdane
+
+============================================================
+DOCUMENT PURPOSE
+============================================================
+
+This document explains the functions, options, presets, validation checks, safe-fix actions, role naming utilities, collider proxy workflow, export behavior and report output of M2Unity Pipeline Suite v1.0.2.
+
+It is written for artists, technical artists and pipeline users who need to understand what each option does and how the tool behaves when options are enabled, disabled, set to warning, or set to blocking.
+
+============================================================
+CORE CONCEPTS
+============================================================
+
+M2Unity Pipeline Suite is built around five main ideas:
+
+1. Analyze
+
+    The tool inspects selected Maya render mesh transforms and creates a validation result for each asset.
+
+2. Role Naming
+
+    The tool allows users to assign selected meshes to explicit Unity preparation roles:
+
+        Mesh_       render mesh
+        COL_Mesh_   collider proxy mesh
+        TRG_Mesh_   trigger proxy mesh
+
+3. Safe Fix
+
+    The tool performs optional artist-controlled cleanup operations such as backup, rename, freeze transform, delete history, pivot move, visibility fix and grid snapping.
+
+4. Revalidate
+
+    The tool analyzes the processed assets again so the user can confirm whether issues were resolved.
+
+5. Export
+
+    The tool exports FBX files, includes matching COL_ and TRG_ proxy meshes when relevant, writes JSON/HTML reports and optionally writes a Unity AssetPostprocessor C# helper.
+
+Maya Y is treated as height/up. Front-facing direction is chosen from +X, -X, +Z, or -Z so pivot target calculations remain deterministic.
+
+============================================================
+STATUS LEVELS
+============================================================
+
+Each asset receives one of these high-level statuses:
+
+Ready
+
+    No blocking issues were found.
+    The asset is normally eligible for export if Export Ready Assets is enabled.
+
+Warning
+
+    No blocking issues were found, but one or more warnings were found.
+    The asset is eligible for export only if Export Warning Assets is enabled.
+
+Blocked
+
+    One or more blocking issues were found.
+    The asset is skipped by default if Skip Blocked Assets is enabled.
+
+============================================================
+SEVERITY SYSTEM
+============================================================
+
+Many validation rules use the same severity choices:
+
+Off
+
+    The rule does not create warnings or blocking issues.
+    The check may be skipped or marked as disabled.
+
+Warning
+
+    The rule can fail, but the asset is still considered exportable if Export Warning Assets is enabled.
+    Use this for quality-control issues that should be reviewed but should not stop production.
+
+Blocking
+
+    The rule can fail and block export by setting the asset status to Blocked.
+    Use this for pipeline requirements that must be fixed before export.
+
+============================================================
+M2UNITY SCORE
+============================================================
+
+Each analyzed asset receives a M2Unity Score.
+
+The score starts from a clean state and is reduced by warnings, blocking issues and failed validation checks.
+
+The score is intended as a quick readability signal. It does not replace manual review.
+
+Typical interpretation:
+
+    90-100     Very clean
+    70-89      Usable but review warnings
+    40-69      Risky or incomplete
+    0-39       Not production-ready without fixes
+
+============================================================
+DASHBOARD / WIZARD TAB
+============================================================
+
+The Dashboard / Wizard tab is the main workflow area.
+
+------------------------------------------------------------
+Pipeline Preset
+------------------------------------------------------------
+
+The preset dropdown selects a predefined collection of settings. The preset is not applied until the user clicks Apply Preset.
+
+Available presets:
+
+    Unity Static Prop
+    Unity Environment Kit
+    Unity Mobile Optimized
+    Unity LOD / Prefab Ready
+    Unity Collider Strict
+
+Changing the preset dropdown alone does not modify Maya scene objects.
+
+------------------------------------------------------------
+Apply Preset
+------------------------------------------------------------
+
+Applies the currently selected preset to the UI controls.
+
+This can change:
+
+    Naming requirements
+    Polycount limits
+    Collider proxy requirement
+    Collider validation strictness
+    Grid step and severity
+    Dimension rules
+    Pivot target and severity
+    LOD readiness checks
+    Socket readiness checks
+    Material readiness checks
+    UV readiness checks
+    Export behavior
+    Safe-fix defaults
+
+Apply Preset does not modify Maya scene objects.
+
+------------------------------------------------------------
+Analyze Selected Assets
+------------------------------------------------------------
+
+Inspects the selected base render mesh transforms in Maya.
+
+It produces:
+
+    Asset status
+    M2Unity Score
+    Validation checks
+    Warnings
+    Blocking issues
+    Fix plan
+    Manual review notes
+    Collider proxy matches
+    Advanced readiness results
+
+Selection behavior:
+
+    Selected transform nodes are inspected.
+    COL_, TRG_ and UCX_ transforms are ignored as base assets when Ignore COL_/TRG_ As Base Assets is enabled.
+    Mesh shapes under selected transforms are included when Include Descendant Mesh Shapes is enabled.
+
+Analyze does not modify the Maya scene.
+
+------------------------------------------------------------
+Apply Safe Fixes
+------------------------------------------------------------
+
+Applies enabled cleanup operations to the current analysis results.
+
+Possible actions:
+
+    Create backup duplicate
+    Hide backup duplicate
+    Unlock transform attributes if enabled
+    Make selected assets visible if enabled
+    Rename or sanitize render mesh name
+    Add required render mesh prefix if missing
+    Remove Maya import / scene prefix before Mesh_ if detected
+    Sync matching COL_ or TRG_ names to the renamed base asset when allowed
+    Delete construction history
+    Freeze transforms
+    Move pivot to target
+    Snap bounds min to grid
+    Snap pivot to grid
+    Revalidate each processed asset after fixes
+
+Important:
+
+    Safe Fix is not the role conversion system.
+    Safe Fix must not turn a render mesh into COL_ or TRG_.
+    Role conversion is handled by the Naming / Role Utility buttons.
+
+After Apply Safe Fixes, the tool restores Maya selection to the processed real base assets rather than leaving backup objects selected.
+
+Apply Safe Fixes can modify Maya scene objects.
+
+------------------------------------------------------------
+Revalidate
+------------------------------------------------------------
+
+Runs Analyze Selected Assets again.
+
+Use this after Safe Fix or role naming changes to confirm the current asset state.
+
+Revalidate does not directly modify Maya scene objects.
+
+------------------------------------------------------------
+Export FBX + Reports
+------------------------------------------------------------
+
+Exports eligible assets to FBX and writes selected reports.
+
+Export performs a fresh COL_ / TRG_ proxy search at export time. This is important because the user may have created, renamed, or fixed collider proxies after the first analysis.
+
+Export can create:
+
+    FBX files
+    M2Unity_Pipeline_Report.json
+    M2Unity_Pipeline_Report.html
+    M2Unity_ModelPostprocessor.cs
+
+Export modifies files on disk but does not intentionally modify mesh geometry.
+
+------------------------------------------------------------
+Clear Results
+------------------------------------------------------------
+
+Clears displayed tool results.
+
+It clears:
+
+    Dashboard cards
+    Asset result table
+    Detail panel
+    Report path panel
+    Internal last analysis/export summary
+
+It does not:
+
+    Rename assets
+    Delete assets
+    Delete backups
+    Change geometry
+    Export files
+    Modify scene objects
+
+------------------------------------------------------------
+Reset to Defaults
+------------------------------------------------------------
+
+Restores default Unity Static Prop settings and clears displayed results.
+
+Typical defaults include:
+
+    Required Prefix: Mesh_
+    Naming Severity: warning
+    Collider Requirement: Collider optional
+    Collider proxy validation enabled
+    Max Polycount: 12000
+    Freeze Required: enabled, blocking
+    Clean History Required: enabled, warning
+    Pivot Target: Bottom Center
+    Grid Step: 100 cm
+    Dimension Check: disabled
+    LOD / socket / material / UV readiness checks: warning
+    Backup Before Fix: enabled
+    Rename / sanitize / freeze / history / pivot fix: enabled
+    JSON report: enabled
+    HTML report: enabled
+    Unity AssetPostprocessor C#: enabled
+
+Reset to Defaults does not modify Maya scene objects.
+
+============================================================
+EXPORT QUEUE OPTIONS
+============================================================
+
+------------------------------------------------------------
+Export Ready Assets
+------------------------------------------------------------
+
+When enabled, assets with Ready status are exported.
+
+When disabled, Ready assets are skipped even if they have no issues.
+
+------------------------------------------------------------
+Export Warning Assets
+------------------------------------------------------------
+
+When enabled, assets with Warning status are exported.
+
+When disabled, assets with Warning status are skipped.
+
+This is useful when a team wants stricter export behavior but does not want to mark every warning rule as blocking.
+
+------------------------------------------------------------
+Skip Blocked Assets
+------------------------------------------------------------
+
+When enabled, assets with Blocked status are skipped.
+
+When disabled, blocked assets may still be exported depending on export logic and rule state. This is generally not recommended for production use.
+
+Important exception:
+
+    If Collider Required is active and no matching COL_ or TRG_ proxy is found at export time, the export is failed for that asset even if other export options are permissive.
+
+------------------------------------------------------------
+Write JSON Report
+------------------------------------------------------------
+
+Writes:
+
+    M2Unity_Pipeline_Report.json
+
+The JSON report includes:
+
+    Tool name and build
+    Timestamp
+    Current settings
+    Export summary
+    Full per-asset analysis data
+    Checks, warnings, blocking issues, fix actions, collider matches and export status
+
+Use JSON for technical debugging or pipeline integration.
+
+------------------------------------------------------------
+Write HTML Report
+------------------------------------------------------------
+
+Writes:
+
+    M2Unity_Pipeline_Report.html
+
+The HTML report includes:
+
+    Summary cards
+    Per-asset status
+    M2Unity Score
+    Export status
+    Polycount
+    Included collider proxy count
+    Issues
+    Fix plan
+    Fixed actions
+    Collider proxy matches
+    Collider target candidates
+    Core checks
+    LOD / Material Slot / UV / Socket readiness checks
+
+Use HTML for artist-friendly QA review.
+
+------------------------------------------------------------
+Write Unity AssetPostprocessor C#
+------------------------------------------------------------
+
+Writes:
+
+    M2Unity_ModelPostprocessor.cs
+
+This script is intended to be used inside a Unity project, not inside Maya.
+
+Recommended location:
+
+    Assets/Editor/M2Unity_ModelPostprocessor.cs
+
+The generated script can:
+
+    Apply conservative model importer defaults
+    Disable camera import
+    Disable light import
+    Disable animation import for static assets
+    Preserve hierarchy
+    Import normals
+    Calculate tangents
+    Generate secondary UVs
+    Convert COL_ objects to MeshCollider proxy objects
+    Convert TRG_ objects to trigger MeshCollider proxy objects
+    Disable renderers on collider and trigger proxy objects
+
+Review the generated script before adding it to a production Unity project.
+
+------------------------------------------------------------
+Triangulate FBX Export
+------------------------------------------------------------
+
+When enabled, the FBX exporter is asked to triangulate exported geometry.
+
+When disabled, the tool does not request triangulation during FBX export.
+
+Use enabled when a pipeline requires triangulated meshes before import. Use disabled when the artist wants to preserve authored polygon structure as much as the FBX exporter allows.
+
+============================================================
+RULES TAB - ASSET SCOPE
+============================================================
+
+------------------------------------------------------------
+Front Axis
+------------------------------------------------------------
+
+Defines which horizontal direction is treated as the asset's front direction for pivot target calculations.
+
+Allowed values:
+
+    +X
+    -X
+    +Z
+    -Z
+
+Maya Y remains the height/up axis.
+
+------------------------------------------------------------
+Ignore COL_/TRG_ As Base Assets
+------------------------------------------------------------
+
+When enabled, selected COL_, TRG_ and UCX_ transforms are ignored as base render assets during Analyze.
+
+This prevents collider proxy meshes from being analyzed as visible render meshes.
+
+Role Utility buttons can still operate on selected COL_, TRG_ and UCX_ objects.
+
+------------------------------------------------------------
+Include Descendant Mesh Shapes
+------------------------------------------------------------
+
+When enabled, mesh shapes under descendant transforms are included in analysis.
+
+This is useful for grouped assets or simple hierarchies.
+
+When disabled, only direct mesh shapes under selected transforms are considered.
+
+============================================================
+RULES TAB - NAMING
+============================================================
+
+------------------------------------------------------------
+Enable Naming Rule
+------------------------------------------------------------
+
+Enables or disables render mesh naming validation.
+
+When enabled, the tool checks whether the base render mesh follows the required prefix rule.
+
+------------------------------------------------------------
+Required Prefix
+------------------------------------------------------------
+
+Defines the required prefix for visible render meshes.
+
+Default:
+
+    Mesh_
+
+Examples:
+
+    Mesh_Chair
+    Mesh_Table
+    Mesh_Rock_LOD0
+
+Safety rule:
+
+    COL_, TRG_ and UCX_ are reserved for proxy roles and should not be used as render mesh prefixes.
+
+If a reserved collider-style prefix is entered as the required render mesh prefix, the tool protects the base mesh workflow and uses a safe render prefix instead.
+
+------------------------------------------------------------
+Naming Severity
+------------------------------------------------------------
+
+Controls the severity of naming rule failures.
+
+Off:
+
+    Naming does not create issues.
+
+Warning:
+
+    Incorrect names create warnings.
+
+Blocking:
+
+    Incorrect names block export.
+
+------------------------------------------------------------
+Sanitize Asset Names
+------------------------------------------------------------
+
+When enabled, invalid characters, namespaces and problematic name fragments can be cleaned during Safe Fix.
+
+The tool also attempts to remove Maya import / scene prefixes before known role prefixes.
+
+Example:
+
+    SceneA_Mesh_Table
+
+can be cleaned to:
+
+    Mesh_Table
+
+============================================================
+RULES TAB - GEOMETRY
+============================================================
+
+------------------------------------------------------------
+Max Polycount
+------------------------------------------------------------
+
+Defines the maximum allowed face count for the analyzed transform.
+
+The tool evaluates mesh faces under the selected asset according to the Include Descendant Mesh Shapes option.
+
+------------------------------------------------------------
+Polycount Severity
+------------------------------------------------------------
+
+Controls whether polycount failures create warnings or blocking issues.
+
+------------------------------------------------------------
+Freeze Required
+------------------------------------------------------------
+
+When enabled, the tool checks whether transform values are frozen.
+
+A typical clean static mesh should have:
+
+    Translate: 0, 0, 0
+    Rotate:    0, 0, 0
+    Scale:     1, 1, 1
+
+------------------------------------------------------------
+Freeze Severity
+------------------------------------------------------------
+
+Controls whether unfrozen transforms create warnings or blocking issues.
+
+------------------------------------------------------------
+Clean History Required
+------------------------------------------------------------
+
+When enabled, the tool checks for construction history that may be unsafe or unnecessary for export.
+
+------------------------------------------------------------
+History Severity
+------------------------------------------------------------
+
+Controls whether construction history creates warnings or blocking issues.
+
+------------------------------------------------------------
+Zero Thickness Warning
+------------------------------------------------------------
+
+Checks whether any bounding-box axis is near zero.
+
+This helps detect accidental planes, collapsed geometry or objects that may not behave as expected as static mesh assets.
+
+------------------------------------------------------------
+Zero Thickness Tolerance
+------------------------------------------------------------
+
+Defines the tolerance used by the zero-thickness check.
+
+------------------------------------------------------------
+Zero Thickness Severity
+------------------------------------------------------------
+
+Controls whether near-zero thickness creates warnings or blocking issues.
+
+============================================================
+RULES TAB - DIMENSIONS
+============================================================
+
+------------------------------------------------------------
+Enable Dimension Check
+------------------------------------------------------------
+
+When enabled, the tool compares the asset's world bounding-box dimensions against expected width, height and depth values.
+
+------------------------------------------------------------
+Expected Width / Height / Depth
+------------------------------------------------------------
+
+Defines target dimensions in Maya scene units, treated as centimeters in the UI wording.
+
+------------------------------------------------------------
+Tolerance
+------------------------------------------------------------
+
+Defines the acceptable difference between actual and expected dimensions.
+
+------------------------------------------------------------
+Dimension Severity
+------------------------------------------------------------
+
+Controls whether dimension mismatch creates a warning or blocking issue.
+
+Safe Fix does not resize geometry automatically. Dimension issues are intended for manual review.
+
+============================================================
+RULES TAB - PIVOT
+============================================================
+
+------------------------------------------------------------
+Enable Pivot Check
+------------------------------------------------------------
+
+When enabled, the tool compares the asset pivot to the expected target pivot location.
+
+------------------------------------------------------------
+Pivot Target
+------------------------------------------------------------
+
+Defines the expected pivot location.
+
+Available target families include:
+
+    Center
+    Bottom Center
+    Bottom Front Center
+    Bottom Back Center
+    Bottom Left Center
+    Bottom Right Center
+    Bottom Front Left
+    Bottom Front Right
+    Bottom Back Left
+    Bottom Back Right
+    Front Center
+    Back Center
+    Left Center
+    Right Center
+    Top Center
+    Top Front Center
+    Top Back Center
+    Top Left Center
+    Top Right Center
+    Top Front Left
+    Top Front Right
+    Top Back Left
+    Top Back Right
+
+The front/back/left/right interpretation depends on the selected Front Axis.
+
+------------------------------------------------------------
+Pivot Tolerance
+------------------------------------------------------------
+
+Defines how close the pivot must be to the calculated target.
+
+------------------------------------------------------------
+Pivot Severity
+------------------------------------------------------------
+
+Controls whether pivot mismatch creates a warning or blocking issue.
+
+------------------------------------------------------------
+Pivot Fix Behavior
+------------------------------------------------------------
+
+If Move Pivot To Target is enabled in Prep / Fix, Safe Fix can move the pivot to the selected target.
+
+This changes pivot position but does not intentionally move mesh vertices.
+
+============================================================
+RULES TAB - GRID
+============================================================
+
+------------------------------------------------------------
+Enable Grid Check
+------------------------------------------------------------
+
+When enabled, the tool checks whether the asset aligns to the selected grid step.
+
+------------------------------------------------------------
+Grid Step
+------------------------------------------------------------
+
+Defines the grid interval.
+
+Default Unity-oriented value:
+
+    100 cm
+
+This commonly represents one meter-style modular alignment in a Maya-centimeter workflow.
+
+------------------------------------------------------------
+Check Bounds Snap
+------------------------------------------------------------
+
+When enabled, the tool checks whether the asset bounding-box minimum point is aligned to the grid step.
+
+------------------------------------------------------------
+Check Size Multiple
+------------------------------------------------------------
+
+When enabled, the tool checks whether the asset bounding-box size is a multiple of the grid step.
+
+------------------------------------------------------------
+Grid Severity
+------------------------------------------------------------
+
+Controls whether grid issues create warnings or blocking issues.
+
+------------------------------------------------------------
+Grid Fix Behavior
+------------------------------------------------------------
+
+If Snap Bounds Min To Grid or Snap Pivot To Grid is enabled in Prep / Fix, Safe Fix can adjust the transform according to grid settings.
+
+============================================================
+RULES TAB - ADVANCED UNITY READINESS
+============================================================
+
+------------------------------------------------------------
+Enable LOD Readiness Check
+------------------------------------------------------------
+
+Checks LOD naming and related readiness.
+
+Expected Unity-friendly naming:
+
+    Mesh_Rock_LOD0
+    Mesh_Rock_LOD1
+    Mesh_Rock_LOD2
+
+The tool checks whether LOD-style names appear consistent and whether the sequence suggests a valid LOD set.
+
+------------------------------------------------------------
+LOD Severity
+------------------------------------------------------------
+
+Controls whether LOD readiness issues create warnings or blocking issues.
+
+------------------------------------------------------------
+Enable Socket / Locator Readiness
+------------------------------------------------------------
+
+Checks locator-style helper nodes under or near the asset.
+
+Expected socket naming:
+
+    SOCKET_Grip
+    SOCKET_Attach
+    SOCKET_Effect
+
+Sockets are optional for simple static meshes.
+
+------------------------------------------------------------
+Socket Severity
+------------------------------------------------------------
+
+Controls whether socket / locator readiness issues create warnings or blocking issues.
+
+------------------------------------------------------------
+Enable Material Slot Readiness
+------------------------------------------------------------
+
+Checks material assignment and material slot count.
+
+The tool can report:
+
+    Missing material assignments
+    Too many material slots
+    Material names that do not match expected prefixes
+
+------------------------------------------------------------
+Material Prefixes
+------------------------------------------------------------
+
+Comma-separated accepted material prefixes.
+
+Default:
+
+    M_, MAT_, MI_
+
+------------------------------------------------------------
+Max Material Slots
+------------------------------------------------------------
+
+Defines the maximum recommended material slot count.
+
+This is useful because excessive material slots can increase draw calls and make asset management harder.
+
+------------------------------------------------------------
+Material Severity
+------------------------------------------------------------
+
+Controls whether material readiness issues create warnings or blocking issues.
+
+------------------------------------------------------------
+Enable UV Readiness Check
+------------------------------------------------------------
+
+Checks UV set existence and sampled UV range behavior.
+
+The UV check is conservative. It does not claim to be a full UV overlap solver.
+
+------------------------------------------------------------
+Require Lightmap UV
+------------------------------------------------------------
+
+When enabled, the tool checks for a UV set name that matches one of the configured lightmap UV names.
+
+This is useful for assets intended for workflows that require secondary UVs.
+
+------------------------------------------------------------
+Lightmap UV Names
+------------------------------------------------------------
+
+Comma-separated list of accepted lightmap UV set names.
+
+Default examples include:
+
+    uv2
+    UV2
+    lightmap
+    Lightmap
+    UV1
+    uv1
+    map2
+
+------------------------------------------------------------
+UV Sample Limit
+------------------------------------------------------------
+
+Defines how many UV samples are inspected during the conservative UV range check.
+
+------------------------------------------------------------
+UV Severity
+------------------------------------------------------------
+
+Controls whether UV issues create warnings or blocking issues.
+
+============================================================
+PREP / FIX TAB
+============================================================
+
+------------------------------------------------------------
+Duplicate Backup Before Fix
+------------------------------------------------------------
+
+When enabled, Safe Fix creates a backup duplicate before modifying the asset.
+
+Backups are named with an internal backup suffix.
+
+------------------------------------------------------------
+Hide Backups
+------------------------------------------------------------
+
+When enabled, backup duplicates are hidden after creation.
+
+------------------------------------------------------------
+Rename / Add Prefix If Missing
+------------------------------------------------------------
+
+When enabled, Safe Fix can sanitize render mesh names and add the required render prefix.
+
+Default render prefix:
+
+    Mesh_
+
+Safety behavior:
+
+    Safe Fix does not intentionally rename render meshes into COL_ or TRG_ roles.
+    Role conversion is handled by dedicated role utility buttons.
+
+------------------------------------------------------------
+Sync Collider Proxy Names To Base Prefix When Collider Proxy Required
+------------------------------------------------------------
+
+When enabled, Safe Fix can attempt to keep matching collider proxy names aligned with the renamed render mesh.
+
+Example:
+
+    Chair
+    COL_Chair_01
+
+after render mesh prefixing may become:
+
+    Mesh_Chair
+    COL_Mesh_Chair_01
+
+This is intended to keep matching stable after render mesh names are cleaned.
+
+------------------------------------------------------------
+Freeze Transform
+------------------------------------------------------------
+
+When enabled, Safe Fix can freeze transforms on processed render meshes.
+
+------------------------------------------------------------
+Delete Construction History
+------------------------------------------------------------
+
+When enabled, Safe Fix can delete construction history on processed render meshes.
+
+------------------------------------------------------------
+Move Pivot To Target
+------------------------------------------------------------
+
+When enabled, Safe Fix can move the pivot to the configured pivot target.
+
+------------------------------------------------------------
+Unlock Transform Attributes
+------------------------------------------------------------
+
+When enabled, Safe Fix can unlock standard transform attributes before applying cleanup operations.
+
+------------------------------------------------------------
+Make Selected Assets Visible
+------------------------------------------------------------
+
+When enabled, Safe Fix can turn visibility back on for processed assets.
+
+------------------------------------------------------------
+Snap Bounds Min To Grid
+------------------------------------------------------------
+
+When enabled, Safe Fix can move the asset so the bounding-box minimum point aligns to the grid.
+
+------------------------------------------------------------
+Snap Pivot To Grid
+------------------------------------------------------------
+
+When enabled, Safe Fix can snap the pivot to the grid.
+
+------------------------------------------------------------
+Create Pivot Ghost Preview
+------------------------------------------------------------
+
+Creates locator-style preview helpers at calculated pivot target positions.
+
+This helps users inspect where the tool expects pivots to be placed before applying pivot fixes.
+
+------------------------------------------------------------
+Delete Pivot Preview Locators
+------------------------------------------------------------
+
+Deletes M2Unity pivot preview locators created by the tool.
+
+============================================================
+COLLIDER PROXY TAB
+============================================================
+
+The Collider Proxy tab contains Unity-specific collider and trigger proxy workflow tools.
+
+------------------------------------------------------------
+Enable Collider Proxy Check
+------------------------------------------------------------
+
+Enables or disables collider proxy validation.
+
+When disabled, collider proxy requirements do not create warnings or blocking issues.
+
+------------------------------------------------------------
+Collider Requirement
+------------------------------------------------------------
+
+Available values:
+
+    Off
+    Collider required
+    Collider optional
+    No custom collider allowed
+
+Off
+
+    Collider checks are skipped.
+
+Collider required
+
+    At least one matching COL_ or TRG_ proxy must be found.
+    If none is found, the asset receives a warning or blocking issue depending on severity.
+    At export time, missing required proxy meshes cause export failure for that asset.
+
+Collider optional
+
+    Matching proxy meshes are reported and included in export when found.
+    Missing proxy meshes do not block by default.
+
+No custom collider allowed
+
+    Matching custom collider proxy meshes can be treated as an issue.
+    Use this when the pipeline expects Unity-generated or manually assigned colliders instead of exported proxy meshes.
+
+------------------------------------------------------------
+Collider Match Mode
+------------------------------------------------------------
+
+Base asset name
+
+    The tool derives matching candidates from the selected render mesh name.
+
+Exact custom target name
+
+    The tool uses the custom target field to search for collider proxies.
+
+------------------------------------------------------------
+Custom Collider Target
+------------------------------------------------------------
+
+Used only when Exact custom target name is selected.
+
+------------------------------------------------------------
+Accept Multiple Collider Proxy Parts
+------------------------------------------------------------
+
+When enabled, the tool accepts multiple matched COL_ or TRG_ parts.
+
+Example:
+
+    Mesh_Table
+    COL_Mesh_Table_01
+    COL_Mesh_Table_02
+
+When disabled, the pipeline may expect only one matched proxy.
+
+------------------------------------------------------------
+Collider Prefixes
+------------------------------------------------------------
+
+Defines accepted collider/trigger proxy prefixes.
+
+Default:
+
+    COL_, TRG_
+
+Recommended naming:
+
+    COL_Mesh_Table_01
+    TRG_Mesh_Door_Interaction
+
+------------------------------------------------------------
+Validate Matched Collider Proxy Meshes
+------------------------------------------------------------
+
+When enabled, matched proxy meshes are validated.
+
+The tool can report:
+
+    Missing mesh shape
+    Excessive face count
+    Locked transform attributes
+    Unfrozen transforms
+    Other proxy readiness concerns
+
+------------------------------------------------------------
+Max Collider Faces
+------------------------------------------------------------
+
+Defines a recommended face-count ceiling for collider proxy meshes.
+
+Default:
+
+    255
+
+This is a conservative proxy guideline and is especially useful when collider meshes may later be used in convex-style workflows.
+
+------------------------------------------------------------
+Collider Proxy Severity
+------------------------------------------------------------
+
+Controls whether collider proxy issues create warnings or blocking issues.
+
+------------------------------------------------------------
+Naming / Role Utility
+------------------------------------------------------------
+
+This section is intentionally separate from Safe Fix.
+
+It can operate on selected render meshes, old UCX meshes, existing COL_ meshes and existing TRG_ meshes.
+
+Set Selected as Render Mesh
+
+    Renames selected mesh transforms to the render mesh role:
+
+        Mesh_<Name>
+
+    Examples:
+
+        Chair       -> Mesh_Chair
+        SM_Table    -> Mesh_Table
+        COL_Chair   -> Mesh_Chair
+
+    Use this only for meshes that should be visible render assets in Unity.
+
+Set Selected as Collider Proxy
+
+    Renames selected mesh transforms to the collider proxy role:
+
+        COL_Mesh_<Name>
+
+    Examples:
+
+        UCX_SM_Table_01 -> COL_Mesh_Table_01
+        Table_Collider  -> COL_Mesh_Table_Collider
+
+    Use this for low-poly collider proxy meshes.
+
+Set Selected as Trigger Proxy
+
+    Renames selected mesh transforms to the trigger proxy role:
+
+        TRG_Mesh_<Name>
+
+    Examples:
+
+        DoorZone -> TRG_Mesh_DoorZone
+
+    Use this for trigger volumes or interaction zones that should be imported as trigger MeshColliders by the generated Unity postprocessor.
+
+Remove M2Unity Role Prefixes
+
+    Removes known role prefixes from selected mesh transforms.
+
+    This can strip prefixes such as:
+
+        Mesh_
+        COL_
+        TRG_
+        COL_Mesh_
+        TRG_Mesh_
+        UCX_
+        SM_
+
+    Use this when cleaning old naming before applying a new role.
+
+------------------------------------------------------------
+Create Simple Box Collider
+------------------------------------------------------------
+
+Creates a simple box-shaped COL_ proxy mesh around the selected render mesh bounds.
+
+The generated collider proxy is intended as a starting point and should be reviewed manually.
+
+------------------------------------------------------------
+Select Asset + Matching Collider
+------------------------------------------------------------
+
+Selects the currently highlighted asset and its matched COL_ / TRG_ proxy meshes.
+
+Useful for inspection before export.
+
+------------------------------------------------------------
+Isolate Asset + Collider
+------------------------------------------------------------
+
+Attempts to isolate the currently highlighted asset and matched proxy meshes in the focused Maya viewport.
+
+------------------------------------------------------------
+Colorize Collider Preview
+------------------------------------------------------------
+
+Assigns temporary preview materials to matched collider proxy meshes.
+
+Typical visual intent:
+
+    Green for acceptable proxy meshes
+    Red for proxy meshes with validation problems
+
+------------------------------------------------------------
+Reset Collider Preview Materials
+------------------------------------------------------------
+
+Restores materials that were temporarily changed by Colorize Collider Preview.
+
+============================================================
+COLLIDER MATCHING RULES
+============================================================
+
+M2Unity tries to match render meshes to collider/trigger proxy meshes by normalizing role prefixes and import prefixes.
+
+Recommended examples:
+
+    Mesh_Table
+    COL_Mesh_Table_01
+    COL_Mesh_Table_02
+    TRG_Mesh_Table_Interaction
+
+The tool can also tolerate some older or mixed naming patterns by stripping known prefixes during comparison.
+
+Known role prefixes include:
+
+    Mesh_
+    COL_
+    TRG_
+    COL_Mesh_
+    TRG_Mesh_
+    UCX_
+    SM_
+
+Maya import / scene prefix cleanup is also considered.
+
+Example:
+
+    ImportedScene_Mesh_Table
+    ImportedScene_COL_Mesh_Table_01
+
+can be interpreted as:
+
+    Mesh_Table
+    COL_Mesh_Table_01
+
+The cleanest production naming remains:
+
+    Mesh_<AssetName>
+    COL_Mesh_<AssetName>_01
+    TRG_Mesh_<AssetName>_Trigger
+
+============================================================
+EXPORT BEHAVIOR WITH MATCHED COLLIDER PROXIES
+============================================================
+
+When exporting a render mesh, the tool refreshes matching at export time.
+
+If matched COL_ or TRG_ objects exist, they are included in the same FBX export selection.
+
+Example scene:
+
+    Mesh_Table
+    COL_Mesh_Table_01
+    COL_Mesh_Table_02
+    TRG_Mesh_Table_Interaction
+
+Export result:
+
+    Mesh_Table.fbx
+
+The FBX contains:
+
+    Mesh_Table
+    COL_Mesh_Table_01
+    COL_Mesh_Table_02
+    TRG_Mesh_Table_Interaction
+
+If Collider Required is enabled and no matched proxy exists, export for that asset fails even if other export rules are permissive.
+
+============================================================
+REPORTS TAB
+============================================================
+
+The Reports tab shows generated file paths and summary information after export.
+
+Possible report outputs:
+
+    M2Unity_Pipeline_Report.json
+    M2Unity_Pipeline_Report.html
+    M2Unity_ModelPostprocessor.cs
+
+Reports are written to the export folder chosen at export time.
+
+============================================================
+HELP TAB
+============================================================
+
+The Help tab explains the recommended workflow and naming conventions.
+
+It summarizes:
+
+    Analyze / Safe Fix / Revalidate / Export workflow
+    Mesh_ render naming
+    COL_Mesh_ collider proxy naming
+    TRG_Mesh_ trigger proxy naming
+    Role utility usage
+    Unity AssetPostprocessor usage
+    Export behavior
+
+============================================================
+UNITY ASSETPOSTPROCESSOR DETAILS
+============================================================
+
+The generated file is:
+
+    M2Unity_ModelPostprocessor.cs
+
+It is written to the selected export folder when Write Unity AssetPostprocessor C# is enabled.
+
+Recommended Unity placement:
+
+    Assets/Editor/M2Unity_ModelPostprocessor.cs
+
+The script is intended as an Editor-only import helper.
+
+High-level behavior:
+
+    OnPreprocessModel applies model importer settings.
+    OnPostprocessModel searches imported hierarchy objects.
+    Objects starting with COL_ receive MeshCollider behavior.
+    Objects starting with TRG_ receive MeshCollider behavior with isTrigger enabled.
+    Renderers on COL_ and TRG_ objects are disabled.
+
+Important production note:
+
+    Teams with custom Unity import pipelines should review and adapt the generated C# script before using it in a shared project.
+
+============================================================
+VALIDATION RESULT DETAILS
+============================================================
+
+Each result may include:
+
+    asset_name
+    asset_path
+    profile
+    warnings
+    blocking_issues
+    ready_for_export
+    status
+    m2u_score
+    checks
+    fix_plan
+    manual_review
+    fixed_actions
+    errors
+    dimensions
+    collision matches
+    collider proxy validation
+    material validation
+    UV validation
+    LOD validation
+    socket validation
+    export status
+
+============================================================
+SAFE FIX SAFETY RULES
+============================================================
+
+Safe Fix is designed to stay conservative.
+
+It can modify names, transforms, pivots, history and visibility depending on enabled options.
+
+It does not intentionally:
+
+    Rebuild topology
+    Resize geometry to fit dimensions
+    Create complex collider geometry
+    Convert render meshes into COL_ or TRG_ role meshes
+    Execute Unity scripts
+    Modify Unity projects
+
+Recommended practice:
+
+    Keep Duplicate Backup Before Fix enabled.
+    Review analysis results before applying fixes.
+    Revalidate after fixes.
+    Review the HTML report after export.
+
+============================================================
+INSTALLER AND SHELF FUNCTIONS
+============================================================
+
+Easy Installer:
+
+    Copies tool files into a selected installation folder.
+    Creates or updates the Maya shelf button.
+    Uses the M2U_Tools shelf.
+    Creates M2U_Tools if it does not exist.
+    Adds a M2Unity Pipeline Suite button.
+    Uses the M2Unity icon.
+
+Reinstall Shelf Button:
+
+    Recreates only the shelf button.
+    Does not reinstall all files.
+    Useful after Maya preference resets or manual shelf cleanup.
+
+Launcher Script:
+
+    Adds the tool folder to sys.path.
+    Imports and reloads m2unity_pipeline_suite_v1_0.
+    Calls show() to open the UI.
+
+============================================================
+RECOMMENDED PRODUCTION WORKFLOWS
+============================================================
+
+------------------------------------------------------------
+Simple Static Prop
+------------------------------------------------------------
+
+    1. Select visible mesh.
+    2. Set Selected as Render Mesh if needed.
+    3. Choose Unity Static Prop preset.
+    4. Analyze.
+    5. Apply Safe Fixes if required.
+    6. Revalidate.
+    7. Export FBX + Reports.
+
+------------------------------------------------------------
+Static Prop With Collider Proxy
+------------------------------------------------------------
+
+    1. Select render mesh.
+    2. Set Selected as Render Mesh.
+    3. Select collider mesh.
+    4. Set Selected as Collider Proxy.
+    5. Select render mesh again.
+    6. Choose Unity Collider Strict or enable Collider Required.
+    7. Analyze.
+    8. Confirm matched COL_ proxy appears.
+    9. Export FBX + Reports.
+
+------------------------------------------------------------
+Old Unreal UCX To Unity Collider Proxy
+------------------------------------------------------------
+
+    1. Select old UCX collision mesh.
+    2. Click Set Selected as Collider Proxy.
+    3. Confirm the name becomes COL_Mesh_<AssetName>.
+    4. Select the corresponding Mesh_ render asset.
+    5. Analyze.
+    6. Export.
+
+------------------------------------------------------------
+Trigger Proxy Setup
+------------------------------------------------------------
+
+    1. Select trigger volume mesh.
+    2. Click Set Selected as Trigger Proxy.
+    3. Confirm the name starts with TRG_Mesh_ or TRG_.
+    4. Export with the matched render asset.
+    5. Use the generated Unity postprocessor to convert TRG_ objects to trigger MeshColliders.
+
+============================================================
+LIMITATIONS
+============================================================
+
+M2Unity Pipeline Suite is not a complete Unity project automation system.
+
+It does not:
+
+    Open Unity automatically
+    Import FBX files into Unity from Maya
+    Guarantee every studio import rule
+    Replace manual QA
+    Replace Unity prefab authoring
+    Replace Unity material setup
+    Guarantee optimal collider performance
+    Perform full UV overlap solving
+    Automatically create all desired collider shapes
+
+The generated Unity AssetPostprocessor is a helper intended to make the exported FBX workflow more deterministic.
+
+============================================================
+SUMMARY
+============================================================
+
+M2Unity Pipeline Suite v1.0.2 provides a controlled Maya-to-Unity workflow for static mesh preparation.
+
+The most important concepts are:
+
+    Mesh_       visible render mesh
+    COL_Mesh_   collider proxy mesh
+    TRG_Mesh_   trigger proxy mesh
+
+The safest workflow is:
+
+    Assign roles first.
+    Analyze render meshes.
+    Apply Safe Fixes only for cleanup.
+    Revalidate.
+    Export FBX with matched proxies.
+    Review reports.
+    Use the generated Unity C# postprocessor when appropriate.
